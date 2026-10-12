@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ author }}</title>
+</head>
+<body>
+    <h1>{{ author.first_name }} {{ author.last_name }}</h1>
+    
+    {% if author.birth_date %}
+        <p><strong>Дата рождения:</strong> {{ author.birth_date }}</p>
+    {% endif %}
+    
+    {% if author.bio %}
+        <h3>Биография:</h3>
+        <p>{{ author.bio }}</p>
+    {% endif %}
+
+    <h2>Книги автора (доступные):</h2>
+    <ul>
+    {% for book in books %}
+        <li><a href="{% url 'library:book_detail' book.slug %}">{{ book.title }}</a> ({{ book.year }} г.)</li>
+    {% empty %}
+        <li>У этого автора пока нет доступных книг.</li>
+    {% endfor %}
+    </ul>
+
+    <hr>
+    <p><a href="{% url 'library:author_list' %}">← Назад к списку авторов</a></p>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список книг</title>
+</head>
+<body>
+    <h1>Доступные книги</h1>
+    <ul>
+    {% for book in books %}
+        <li>
+            <!-- Название книги — ссылка на детальную страницу -->
+            <a href="{% url 'library:book_detail' book.slug %}"><strong>{{ book.title }}</strong></a> — 
+            Автор: <a href="{% url 'library:author_detail' book.author.pk %}">{{ book.author }}</a>, 
+            Год: {{ book.year }}, 
+            Цена: {{ book.price }} руб.
+        </li>
+    {% empty %}
+        <p>Пока ничего нет.</p>
+    {% endfor %}
+    </ul>
+    <p><a href="{% url 'library:author_list' %}">Список авторов</a> | <a href="{% url 'library:about' %}">О библиотеке</a></p>
+</body>
+</html>
