@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Библиотека{% endblock %}</title>
+    <!-- Bootstrap 5 CSS через CDN -->
+    <link href="https://jsdelivr.net" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+    {% include 'partials/header.html' %}
+
+    <main class="container my-4 flex-grow-1">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    {% include 'partials/footer.html' %}
+
+    <script src="https://jsdelivr.net"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

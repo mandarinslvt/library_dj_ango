@@ -1,0 +1,31 @@
+<header class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <!-- Логотип — ссылка на список книг -->
+        <a class="navbar-brand fw-bold" href="{% url 'library:book_list' %}">📚 Библиотека</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'library:book_list' %}">Книги</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'library:author_list' %}">Авторы</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'library:about_page' %}">О библиотеке</a>
+                </li>
+            </ul>
+            <!-- Блок пользователя справа -->
+            <div class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <span class="nav-item nav-link text-white me-2">Привет, <strong>{{ user.username }}</strong></span>
+                    <a class="btn btn-outline-light btn-sm" href="#">Выйти</a>
+                {% else %}
+                    <a class="btn btn-primary btn-sm" href="#">Войти</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>
