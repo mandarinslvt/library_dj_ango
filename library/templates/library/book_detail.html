@@ -1,28 +1,39 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ book.title }}</title>
-</head>
-<body>
-    <h1>{{ book.title }}</h1>
-    <p><strong>Автор:</strong> <a href="{% url 'library:author_detail' book.author.pk %}">{{ book.author }}</a></p>
-    <p><strong>Жанры:</strong> 
-        {% for genre in book.genres.all %}
-            {{ genre.name }}{% if not forloop.last %}, {% endif %}
-        {% empty %}
-            —
-        {% endfor %}
-    </p>
-    <p><strong>Год издания:</strong> {{ book.year }}</p>
-    <p><strong>ISBN:</strong> {{ book.isbn|default:"—" }}</p>
-    <p><strong>Количество страниц:</strong> {{ book.pages }}</p>
-    <p><strong>Цена:</strong> {{ book.price }} руб.</p>
-    
-    <h3>Описание:</h3>
-    <p>{{ book.description|default:"Описание отсутствует." }}</p>
+{% extends 'base.html' %}
 
-    <hr>
-    <p><a href="{% url 'library:book_list' %}">← Назад к списку</a></p>
-</body>
-</html>
+{% block title %}{{ book.title }} | Библиотека{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <a href="{% url 'library:book_list' %}" class="btn btn-link text-decoration-none p-0">← Назад к списку книг</a>
+</div>
+
+<div class="card shadow-sm border-0 p-4">
+    <div class="card-body">
+        <h1 class="card-title fw-bold text-dark mb-3">{{ book.title }}</h1>
+        <h4 class="text-secondary mb-4">Автор: {{ book.author.first_name }} {{ book.author.last_name }}</h4>
+        
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item bg-transparent"><strong>Год издания:</strong> {{ book.year }}</li>
+                    <li class="list-group-item bg-transparent"><strong>ISBN:</strong> {{ book.isbn }}</li>
+                    <li class="list-group-item bg-transparent"><strong>Количество страниц:</strong> {{ book.pages }}</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item bg-transparent"><strong>Цена:</strong> <span class="text-success fw-bold">{{ book.price }} ₽</span></li>
+                    <li class="list-group-item bg-transparent"><strong>Жанры:</strong> 
+                        {% for genre in book.genres.all %}
+                            {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <h5 class="fw-bold text-dark mt-4">Описание книги</h5>
+        <p class="text-secondary lh-lg">{{ book.description }}</p>
+    </div>
+</div>
+{% endblock %}

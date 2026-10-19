@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.db.models import Count
 from .models import Author, Genre, Book
 
 
@@ -22,6 +21,7 @@ class GenreAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
     def get_queryset(self, request):
+        from django.db.models import Count  # Импортируем прямо здесь
         queryset = super().get_queryset(request)
         return queryset.annotate(books_count_annotated=Count('books'))
 
