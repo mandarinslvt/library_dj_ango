@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ book.title }} | Библиотека{% endblock %}
+{% block title %}{{ title }} | Библиотека{% endblock %}
 
 {% block content %}
 <div class="mb-3">
-    <a href="{% url 'library:book_list' %}" class="btn btn-link text-decoration-none p-0">← Назад к списку книг</a>
+    <!-- Используем back_url из контекста -->
+    <a href="{{ back_url }}" class="btn btn-link text-decoration-none p-0">← Назад к списку книг</a>
 </div>
 
 <div class="card shadow-sm border-0 p-4">
@@ -16,16 +17,21 @@
             <div class="col-md-6">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item bg-transparent"><strong>Год издания:</strong> {{ book.year }}</li>
-                    <li class="list-group-item bg-transparent"><strong>ISBN:</strong> {{ book.isbn }}</li>
+                    <li class="list-group-item bg-transparent"><strong>ISBN:</strong> 
+                        {% if book.isbn %}{{ book.isbn }}{% else %}—{% endif %}
+                    </li>
                     <li class="list-group-item bg-transparent"><strong>Количество страниц:</strong> {{ book.pages }}</li>
                 </ul>
             </div>
             <div class="col-md-6">
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item bg-transparent"><strong>Цена:</strong> <span class="text-success fw-bold">{{ book.price }} ₽</span></li>
+                    <li class="list-group-item bg-transparent"><strong>Цена:</strong> <span class="text-success fw-bold">{{ book.price|floatformat:2 }} ₽</span></li>
+                    <li class="list-group-item bg-transparent"><strong>Дата добавления:</strong> {{ book.created_at|date:"d.m.Y" }}</li>
                     <li class="list-group-item bg-transparent"><strong>Жанры:</strong> 
                         {% for genre in book.genres.all %}
                             {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                            —
                         {% endfor %}
                     </li>
                 </ul>
@@ -33,7 +39,9 @@
         </div>
 
         <h5 class="fw-bold text-dark mt-4">Описание книги</h5>
-        <p class="text-secondary lh-lg">{{ book.description }}</p>
+        <div class="text-secondary lh-lg">
+            {% if book.description %}{{ book.description|linebreaks }}{% else %}<p>Описание пока не добавлено.</p>{% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}

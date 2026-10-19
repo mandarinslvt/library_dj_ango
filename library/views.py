@@ -1,23 +1,49 @@
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Count
-from .models import Book, Author
+from django.urls import reverse
+from .models import Book, Reader
 
+# 1. Список книг
 def book_list_view(request):
-    books = Book.objects.filter(is_available=True).select_related('author')
-    return render(request, 'library/book_list.html', {'books': books})
+    books_queryset = Book.objects.filter(is_available=True).select_related('author').order_by('-created_at')
+    
+    context = {
+        'books': books_queryset,
+        'title': 'Каталог книг',
+        'total_count': books_queryset.count(), 
+        'has_books': books_queryset.exists(),   
+    }
+    return render(request, 'library/book_list.html', context)
 
+# 2. Детальная страница книги
 def book_detail_view(request, slug):
-    book = get_object_or_404(Book, slug=slug, is_available=True)
-    return render(request, 'library/book_detail.html', {'book': book})
+    book = get_object_or_404(
+        Book.objects.select_related('author').prefetch_related('genres'), 
+        slug=slug, 
+        is_available=True
+    )
+    
+    context = {
+        'book': book,
+        'title': book.title, 
+        'back_url': reverse('library:book_list'),
+    }
+    return render(request, 'library/book_detail.html', context)
 
-def author_list_view(request):
-    authors = Author.objects.annotate(books_count=Count('books'))
-    return render(request, 'library/author_list.html', {'authors': authors})
+def reader_list_view(request):
+    readers_queryset = Reader.objects.all().order_by('last_name') 
+    
+    context = {
+        'readers': readers_queryset,
+        'title': 'Читатели',
+        'total_count': readers_queryset.count(),
+    }
+    return render(request, 'library/reader_list.html', context)
 
-def author_detail_view(request, pk):
-    author = get_object_or_404(Author, pk=pk)
-    books = author.books.filter(is_available=True)
-    return render(request, 'library/author_detail.html', {'author': author, 'books': books})
-
-def about_view(request):
-    return render(request, 'library/about.html', {'title': 'О библиотеке'})
+def reader_detail_view(request, pk):
+    reader = get_object_or_404(Reader, pk=pk)
+    
+    context = {
+        'reader': reader,
+        'title': f'Карточка читателя: {reader.last_name}',
+    }
+    return render(request, 'library/reader_detail.html', context)
