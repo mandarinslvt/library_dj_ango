@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} | Библиотека{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <a href="{% url 'library:reader_list' %}" class="btn btn-link text-decoration-none p-0">← Назад к списку читателей</a>
+</div>
+
+<div class="card shadow-sm border-0 p-4">
+    <div class="card-body">
+        <h1 class="card-title fw-bold text-dark mb-4">{{ reader.last_name }} {{ reader.first_name }} {{ reader.middle_name }}</h1>
+        
+        <div class="row g-3">
+            <div class="col-md-6">
+                <p><strong>Номер билета:</strong> <span class="badge bg-secondary fs-6">{% if reader.ticket_number %}{{ reader.ticket_number }}{% else %}—{% endif %}</span></p>
+                <p><strong>Дата регистрации:</strong> {{ reader.registration_date|date:"d.m.Y" }}</p>
+                <p><strong>Email:</strong> <a href="mailto:{{ reader.email }}">{{ reader.email }}</a></p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Телефон:</strong> {% if reader.phone %}{{ reader.phone }}{% else %}—{% endif %}</p>
+                <p><strong>Адрес проживания:</strong> {% if reader.address %}{{ reader.address }}{% else %}Адрес не указан{% endif %}</p>
+            </div>
+        </div>
+        
+        <!-- Заглушка под будущую модель выдач -->
+        <h5 class="fw-bold text-dark mt-4">Книги на руках</h5>
+        <p class="text-muted small">Функционал borrowing находится в разработке.</p>
+    </div>
+</div>
+{% endblock %}
