@@ -17,14 +17,10 @@ class AuthorAdmin(admin.ModelAdmin):
 
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
-    # В списке — название, slug, количество книг в жанре
     list_display = ('name', 'slug', 'book_count')
-    # Поиск — по названию
     search_fields = ('name',)
-    # Slug заполняется автоматически из названия при вводе в форме
     prepopulated_fields = {'slug': ('name',)}
 
-    # Оптимизируем запрос к БД через annotate, чтобы избежать проблемы N+1
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
         return queryset.annotate(books_count_annotated=Count('books'))
